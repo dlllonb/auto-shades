@@ -9,6 +9,7 @@ const int echoPin = 12;
 // for distance sensor 
 const float c = 3.43e5;
 long duration;
+float distThresh = 200; 
 
 bool shades = false; // whether shades are up or down, possibly unneeded 
 bool toggle = false; // whether the shades should be toggled
@@ -32,26 +33,41 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
-  if
+  distance();
+  light();
+  bluetooth();
 
+  if (toggle) {
+    toggle = false;
+    servos();
+    shades = !shades;
+  }
 
 }
 
 void servos(){
 
-
-}
-
-void light(){
-  
 }
 
 void distance(){
+  // distance sensor can toggle the shade position
+  digitalWrite(pingPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pingPin, LOW);
+  durationX = pulseIn(echoPin, HIGH);
+  float distance = duration * 1.e-6 * c / 2;
 
+  if (distance < distThresh) {
+    toggle = true;
+  }
+}
+
+void light(){
+  // light sensor can toggle the shade position
 }
 
 void bluetooth(){
-
+  // bluetooth input can toggle the shade position
 }
 
 
