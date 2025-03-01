@@ -54,7 +54,7 @@ void distance(){
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(pingPin, LOW);
-  durationX = pulseIn(echoPin, HIGH);
+  duration = pulseIn(echoPin, HIGH);
   float distance = duration * 1.e-6 * c / 2;
 
   if (distance < distThresh) {
