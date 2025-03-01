@@ -17,10 +17,10 @@ void loop() {
     digitalWrite(pingPin, HIGH);
     delayMicroseconds(10);
     digitalWrite(pingPin, LOW);
-    durationX = pulseIn(echoPin, HIGH);
+    duration = pulseIn(echoPin, HIGH);
     float distance = duration * 1.e-6 * c / 2;
 
     // i forget the units but I believe it's mm? 
     Serial.print("dist:");
-    Serial.println(distanceX);
+    Serial.println(distance);
 }
