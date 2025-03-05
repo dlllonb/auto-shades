@@ -4,10 +4,10 @@
 // HCI FINAL PROJECT
 
 //pins
-const int pingPin = 6; 
+const int pingPin = 4; 
 const int echoPin = 5;
 const int servo1Pin = 7; 
-const int servo2Pin = 8; 
+const int servo2Pin = 6; 
 const int ldrPin = A0;
 
 //Bluetooth setup
@@ -52,7 +52,7 @@ const unsigned long BTBlockTime = 5000;
 const int lightThreshold = 600;
 
 //bool to show whether shades are up or down
-bool shadesUp = false;
+bool shadesUp = true;
 
 //bool to control whether shades should be toggled
 bool toggle = false;
@@ -68,13 +68,19 @@ unsigned long lastDistanceToggle = 0;
 // last blocking light after BT trigger
 unsigned long lastBluetoothTrigger = 0;
 
+int upAngle1 = 65;
+int downAngle1 = 120;
+//2 has the distance sensor lol
+int upAngle2 = 120;
+int downAngle2 = 70;
+
 void setup() {
   Serial.begin(9600);
   //servo pins
   servo1.attach(servo1Pin);
   servo2.attach(servo2Pin);
-  servo1.write(90);
-  servo2.write(90);
+  servo1.write(upAngle1);
+  servo2.write(upAngle2);
   //dist pins
   pinMode(pingPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -101,25 +107,29 @@ void loop() {
   //check BT input
   bluetooth();
 
-  //check if distance sensor can activate (based on the 1 second block)
+  // check if distance sensor can activate (based on the 1 second block)
   if (millis() - lastDistanceToggle > distanceBlockTime) {
     distance();
   }
 
-  //light sensor can only activate after 5 seconds since last distance OR BT trigger
+  // light sensor can only activate after 5 seconds since last distance OR BT trigger
   if ((millis() - lastDistanceTrigger > lightBlockTime) && (millis() - lastBluetoothTrigger > BTBlockTime)) {
     light();
   }
 
+  servo();
+}
+
+void servo() {
   //if toggle is set, move servos instantly to specific position
   if (toggle) {
     toggle = false;
     shadesUp = !shadesUp;
 
-    int targetAngle = shadesUp ? 0 : 90;
-    servo1.write(targetAngle);
-    servo2.write(targetAngle);
-
+    int targetAngle1 = shadesUp ? upAngle1 : downAngle1;
+    int targetAngle2 = shadesUp ? upAngle2 : downAngle2;
+    servo1.write(targetAngle1);
+    servo2.write(targetAngle2);
     Serial.print("Shades Status: ");
     Serial.println(shadesUp ? "UP" : "DOWN");
   }
