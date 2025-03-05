@@ -49,7 +49,8 @@ const unsigned long distanceBlockTime = 1000;
 //this prevents the light sensor from affecting the state of the shades input based on the BT sensor (for 5 seconds)
 const unsigned long BTBlockTime = 5000;
 //Light sensor threshold
-const int lightThreshold = 600;
+//const int lightThreshold = 730;
+const int lightThreshold = analogRead(ldrPin) + 40;
 
 //bool to show whether shades are up or down
 bool shadesUp = true;
@@ -69,7 +70,7 @@ unsigned long lastDistanceToggle = 0;
 unsigned long lastBluetoothTrigger = 0;
 
 int upAngle1 = 65;
-int downAngle1 = 120;
+int downAngle1 = 116;
 //2 has the distance sensor lol
 int upAngle2 = 120;
 int downAngle2 = 70;
@@ -102,6 +103,7 @@ void setup() {
   BLE.advertise(); // start advertising
   Serial.println("Bluetooth® device active, waiting for connections...");
 }
+
 
 void loop() {
   //check BT input
